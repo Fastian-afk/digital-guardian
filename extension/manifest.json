@@ -2,15 +2,15 @@
   "manifest_version": 3,
   "name": "Digital Guardian",
   "version": "2.0.0",
-  "description": "AI-powered Trust Layer. Detects misinformation and provides explainable Trust Scores in real-time. UNESCO MIL Hackathon 2026.",
+  "description": "AI-powered Trust Layer. Detects misinformation and provides explainable Trust Scores in real-time. UNESCO MIL Hackathon 2026. No backend required.",
   "permissions": [
     "activeTab",
     "scripting",
     "storage"
   ],
   "host_permissions": [
-    "https://digital-guardian.up.railway.app/*",
-    "http://127.0.0.1:8000/*"
+    "https://api.groq.com/*",
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "popup/popup.html",
@@ -35,17 +35,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["config.js", "content.js"],
+      "js": ["content.js"],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["config.js"],
+      "resources": ["domains.json", "config.js"],
       "matches": ["<all_urls>"]
     }
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  ]
 }

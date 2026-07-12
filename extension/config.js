@@ -1,24 +1,23 @@
 /**
  * config.js — Digital Guardian Extension Configuration
  * ──────────────────────────────────────────────────────
- * Single source of truth for the backend URL.
- * 
- * PRODUCTION: Points to the deployed Railway/Render cloud backend.
- * LOCAL DEV:  Change BACKEND_URL to "http://127.0.0.1:8000" for local testing.
- * 
- * Judges and end-users need ZERO local setup — the cloud backend handles everything.
+ * The extension is FULLY SELF-CONTAINED.
+ * It calls Groq API directly — no backend server required.
+ * Judges and users need zero local setup.
  */
 
 const DG_CONFIG = {
-  // ── Cloud Backend (for submission / judges / public users) ──
-  BACKEND_URL: "https://digital-guardian.up.railway.app",
+  // Groq API — free, no local install, 0 bytes disk usage
+  // llama-3.3-70b-versatile: best free model, ~500 tok/sec
+  GROQ_API_KEY: "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",
+  GROQ_MODEL:   "llama-3.3-70b-versatile",
+  GROQ_URL:     "https://api.groq.com/openai/v1/chat/completions",
 
-  // ── Fallback for local development ──
-  // Change BACKEND_URL to this if running locally:
-  // BACKEND_URL: "http://127.0.0.1:8000",
+  // Scoring weights
+  DOMAIN_WEIGHT:   0.40,
+  SEMANTIC_WEIGHT: 0.60,
 
-  API_VERSION: "v1",
+  // Analysis limits
+  MAX_CONTENT_CHARS: 12000,
+  MAX_MARKERS:       8,
 };
-
-// Full base URL helper used by background.js and popup.js
-const API_BASE = `${DG_CONFIG.BACKEND_URL}/api/${DG_CONFIG.API_VERSION}`;
