@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Guardian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Header ── -->
+    <header id="header">
+      <div id="logo-wrap">
+        <div id="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="url(#shieldGrad)"/>
+            <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="shieldGrad" x1="3" y1="2" x2="21" y2="23" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <div id="brand-name">Digital Guardian</div>
+          <div id="brand-sub">AI Trust Layer · v2.0</div>
+        </div>
+      </div>
+      <div id="status-dot-wrap">
+        <span id="status-dot"></span>
+        <span id="status-text">Checking...</span>
+      </div>
+    </header>
+
+    <!-- ── Idle State ── -->
+    <div id="view-idle" class="view active">
+      <div id="idle-illustration">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" stroke="#1a1a2e" stroke-width="2" fill="#0a0a14"/>
+          <path d="M40 12L18 23v16c0 12.8 9.7 24.8 22 27.8 12.3-3 22-15 22-27.8V23L40 12z" fill="url(#idleShield)"/>
+          <path d="M31 40l6 6 12-12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="40" r="38" stroke="url(#ringGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+          <defs>
+            <linearGradient id="idleShield" x1="18" y1="12" x2="62" y2="68" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#4f46e5"/>
+              <stop offset="100%" stop-color="#7c3aed"/>
+            </linearGradient>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 id="idle-title">Ready to Scan</h1>
+      <p id="idle-desc">Analyze this page for misinformation using sovereign AI. Powered by llama3-70B. Your data never leaves this machine.</p>
+      <button id="btn-scan" aria-label="Scan this page">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Scan This Page
+      </button>
+      <div id="idle-mil-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#6366f1"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+        UNESCO MIL Hackathon 2026
+      </div>
+    </div>
+
+    <!-- ── Loading State ── -->
+    <div id="view-loading" class="view">
+      <div id="loading-ring">
+        <svg width="72" height="72" viewBox="0 0 72 72">
+          <circle cx="36" cy="36" r="30" stroke="#1a1a2e" stroke-width="5" fill="none"/>
+          <circle cx="36" cy="36" r="30" stroke="url(#loadGrad)" stroke-width="5" fill="none"
+            stroke-dasharray="188" stroke-dashoffset="60" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate"
+              from="0 36 36" to="360 36 36" dur="0.9s" repeatCount="indefinite"/>
+          </circle>
+          <defs>
+            <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div id="loading-pulse">🧠</div>
+      </div>
+      <div id="loading-label">Analyzing with AI</div>
+      <div id="loading-steps">
+        <div class="load-step" id="step-source">
+          <span class="step-icon">🔍</span> Verifying source reputation...
+        </div>
+        <div class="load-step" id="step-semantic">
+          <span class="step-icon">🧠</span> LLM semantic analysis...
+        </div>
+        <div class="load-step" id="step-score">
+          <span class="step-icon">📊</span> Computing Trust Score...
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Result State ── -->
+    <div id="view-result" class="view">
+      <!-- Score Section -->
+      <div id="score-section">
+        <div id="score-ring-wrap">
+          <svg id="score-ring-svg" width="106" height="106" viewBox="0 0 106 106">
+            <circle cx="53" cy="53" r="44" stroke="#1a1a2e" stroke-width="7" fill="none"/>
+            <circle id="score-arc" cx="53" cy="53" r="44" stroke="#22c55e" stroke-width="7" fill="none"
+              stroke-dasharray="276" stroke-dashoffset="276" stroke-linecap="round"
+              transform="rotate(-90 53 53)" style="transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1), stroke 0.5s ease;"/>
+          </svg>
+          <div id="score-center">
+            <div id="score-number">--</div>
+            <div id="score-label">/ 100</div>
+          </div>
+        </div>
+        <div id="score-right">
+          <div id="risk-badge">--</div>
+          <div id="engine-badge">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            <span id="engine-label">Analyzing...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Card -->
+      <div class="result-card" id="card-domain">
+        <div class="card-label">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Source Reputation
+        </div>
+        <div id="domain-row">
+          <span id="result-domain">--</span>
+          <span id="result-domain-score">--</span>
+        </div>
+        <div id="domain-rep-label">--</div>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="result-card" id="card-summary">
+        <div class="card-label">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 16h4M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          AI Summary
+        </div>
+        <p id="result-summary">--</p>
+      </div>
+
+      <!-- Flags Card -->
+      <div class="result-card" id="card-flags">
+        <div class="card-label">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Flags Detected
+          <span id="flag-count-badge">0</span>
+        </div>
+        <div id="flags-list"></div>
+      </div>
+
+      <!-- Actions -->
+      <div id="result-actions">
+        <button id="btn-rescan" class="btn-secondary">↺ Re-scan</button>
+        <div id="cached-note"></div>
+      </div>
+    </div>
+
+    <!-- ── Error State ── -->
+    <div id="view-error" class="view">
+      <div id="error-icon">⚠️</div>
+      <div id="error-title">Analysis Failed</div>
+      <p id="error-message">Could not connect to the Digital Guardian backend.</p>
+      <div id="error-hint">Make sure the server is running:<br/><code>python run.py</code></div>
+      <button id="btn-retry">Try Again</button>
+    </div>
+
+  </div>
+  <script src="../config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

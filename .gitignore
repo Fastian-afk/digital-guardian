@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Database (auto-created on startup)
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+
+# Environment — DO NOT commit real keys
+# .env is committed as a template (key is blanked below)
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
