@@ -132,18 +132,25 @@ function ruleFallback(content) {
   return markers;
 }
 
+async function getGroqKey() {
+  return new Promise(resolve => chrome.storage.sync.get("groq_api_key", r => resolve(r.groq_api_key || "")));
+}
+
 async function analyzeSemantics(content) {
-  const truncated = content.slice(0, DG_CONFIG.MAX_CONTENT_CHARS);
+  const apiKey = await getGroqKey();
+  if (!apiKey) {
+    console.warn("[DG] No Groq API key set — using rule-based fallback.");
+    return { markers: ruleFallback(content), engine: "rule_based", llm_summary: "" };
+  }
+
+  const truncated  = content.slice(0, DG_CONFIG.MAX_CONTENT_CHARS);
   const userPrompt = `Analyze this article text for MIL violations:\n\n--- BEGIN TEXT ---\n${truncated}\n--- END TEXT ---\n\nRespond with ONLY valid JSON.`;
 
   try {
     const resp = await fetch(DG_CONFIG.GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${DG_CONFIG.GROQ_API_KEY}`,
-        "Content-Type":  "application/json",
-      },
-      body: JSON.stringify({
+      method:  "POST",
+      headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body:    JSON.stringify({
         model:           DG_CONFIG.GROQ_MODEL,
         messages:        [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userPrompt }],
         temperature:     0.1,
@@ -151,22 +158,20 @@ async function analyzeSemantics(content) {
         response_format: { type: "json_object" },
       }),
     });
-
     if (!resp.ok) throw new Error(`Groq HTTP ${resp.status}`);
-    const data    = await resp.json();
-    const raw     = data?.choices?.[0]?.message?.content || "";
-    const parsed  = _extractJSON(raw);
-
+    const data   = await resp.json();
+    const raw    = data?.choices?.[0]?.message?.content || "";
+    const parsed = _extractJSON(raw);
     if (parsed?.markers && Array.isArray(parsed.markers)) {
       return { markers: parsed.markers.slice(0, DG_CONFIG.MAX_MARKERS), engine: "llm", llm_summary: parsed.llm_summary || "" };
     }
     throw new Error("Bad JSON schema from LLM");
-
   } catch (err) {
-    console.warn("[DG] LLM failed, using rule-based fallback:", err.message);
-    return { markers: ruleFallback(truncated), engine: "rule_based", llm_summary: "" };
+    console.warn("[DG] LLM failed, rule-based fallback:", err.message);
+    return { markers: ruleFallback(content.slice(0, DG_CONFIG.MAX_CONTENT_CHARS)), engine: "rule_based", llm_summary: "" };
   }
 }
+
 
 
 // ─────────────────────────────────────────────────────────────────────────────

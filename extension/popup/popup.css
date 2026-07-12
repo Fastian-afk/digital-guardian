@@ -355,6 +355,35 @@ html, body {
 }
 #btn-retry:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
 
+/* ── Setup / Onboarding ── */
+#view-setup { gap: 10px; text-align: center; }
+#setup-icon { font-size: 40px; margin-bottom: 4px; }
+#setup-title { font-size: 18px; font-weight: 800; background: linear-gradient(135deg,#fff,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+#setup-desc  { font-size: 11.5px; color: var(--text-muted); line-height: 1.7; max-width: 290px; }
+#setup-steps-info { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; text-align: left; }
+.setup-step-item { font-size: 11.5px; color: #9ca3af; padding: 3px 0; }
+.setup-step-item strong { color: var(--accent); }
+#api-key-input {
+  width: 100%; padding: 10px 13px; margin-top: 4px;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text-primary);
+  font-family: monospace; font-size: 12px; outline: none;
+  transition: border-color 0.2s;
+}
+#api-key-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+#key-error { font-size: 11px; color: var(--red); min-height: 16px; }
+#btn-save-key {
+  width: 100%; padding: 11px; margin-top: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white; border: none; border-radius: 10px;
+  font-size: 13px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+}
+#btn-save-key:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(99,102,241,0.55); }
+#groq-link { font-size: 10.5px; color: var(--accent); text-decoration: none; }
+#groq-link:hover { text-decoration: underline; }
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }

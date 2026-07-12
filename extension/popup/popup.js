@@ -264,9 +264,36 @@ function escHtml(str) {
 // Init
 // ─────────────────────────────────────────────────────────────────────────────
 
-document.addEventListener("DOMContentLoaded", async () => {
-  _lastHealthData = await checkBackendHealth();
+async function getStoredKey() {
+  return new Promise(resolve => chrome.storage.sync.get("groq_api_key", r => resolve(r.groq_api_key || "")));
+}
+
+function bindMainButtons() {
   document.getElementById("btn-scan")?.addEventListener("click", runAnalysis);
-  document.getElementById("btn-rescan")?.addEventListener("click", () => { showView(Views.IDLE); setTimeout(runAnalysis, 80); });
+  document.getElementById("btn-rescan")?.addEventListener("click", () => { showView("idle"); setTimeout(runAnalysis, 80); });
   document.getElementById("btn-retry")?.addEventListener("click", runAnalysis);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const storedKey = await getStoredKey();
+
+  if (!storedKey) {
+    showView("setup");
+    document.getElementById("btn-save-key")?.addEventListener("click", async () => {
+      const key   = document.getElementById("api-key-input").value.trim();
+      const errEl = document.getElementById("key-error");
+      if (!key.startsWith("gsk_") || key.length < 20) {
+        errEl.textContent = "Invalid key — Groq keys start with gsk_";
+        return;
+      }
+      await chrome.storage.sync.set({ groq_api_key: key });
+      _lastHealthData = await checkBackendHealth();
+      showView("idle");
+      bindMainButtons();
+    });
+    return;
+  }
+
+  _lastHealthData = await checkBackendHealth();
+  bindMainButtons();
 });

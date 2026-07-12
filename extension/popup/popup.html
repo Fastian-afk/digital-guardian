@@ -179,6 +179,22 @@
       <button id="btn-retry">Try Again</button>
     </div>
 
+    <!-- ── Setup / Onboarding State ── -->
+    <div id="view-setup" class="view">
+      <div id="setup-icon">🔑</div>
+      <h2 id="setup-title">One-time Setup</h2>
+      <p id="setup-desc">Digital Guardian uses a free Groq API key to power its AI analysis. Your key is stored locally and never shared.</p>
+      <div id="setup-steps-info">
+        <div class="setup-step-item">1. Go to <strong>console.groq.com</strong></div>
+        <div class="setup-step-item">2. Sign up free → API Keys → Create Key</div>
+        <div class="setup-step-item">3. Paste it below — done forever ✅</div>
+      </div>
+      <input id="api-key-input" type="password" placeholder="gsk_..." autocomplete="off" spellcheck="false" />
+      <div id="key-error"></div>
+      <button id="btn-save-key">Save & Start →</button>
+      <a id="groq-link" href="https://console.groq.com" target="_blank">Get free key at console.groq.com ↗</a>
+    </div>
+
   </div>
   <script src="../config.js"></script>
   <script src="popup.js"></script>
