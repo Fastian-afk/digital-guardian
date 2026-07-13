@@ -1,19 +1,27 @@
 /**
  * background.js — Digital Guardian Service Worker
  * ─────────────────────────────────────────────────
- * SELF-CONTAINED architecture. No backend server required.
- * 
- * Full pipeline runs here:
- *   Agent A: Domain reputation (bundled domains.json)
- *   Agent B: Groq LLM semantic analysis (llama3-70B)
- *   Agent C: Trust Score synthesis
- * 
- * Caches results in chrome.storage.session (cleared on browser close).
+ * SELF-CONTAINED: No backend required. Full 3-agent pipeline runs here.
+ * Agent A: Domain reputation (bundled domains.json)
+ * Agent B: Groq LLM (llama3-70B) with rule-based fallback
+ * Agent C: Trust Score synthesis
  */
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────
+// Config (inlined — no external dependency)
+// ──────────────────────────────────────────────────────────────────────────────
+const DG_CONFIG = {
+  GROQ_MODEL:        "llama-3.3-70b-versatile",
+  GROQ_URL:          "https://api.groq.com/openai/v1/chat/completions",
+  DOMAIN_WEIGHT:     0.40,
+  SEMANTIC_WEIGHT:   0.60,
+  MAX_CONTENT_CHARS: 12000,
+  MAX_MARKERS:       8,
+};
+
+// ──────────────────────────────────────────────────────────────────────────────
 // MIL System Prompt
-// ─────────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────
 
 const SYSTEM_PROMPT = `You are a Media and Information Literacy (MIL) analysis engine for the UNESCO Digital Guardian project.
 
@@ -35,7 +43,7 @@ RULES:
 1. Only flag genuinely suspicious content. Do not flag neutral factual statements.
 2. confidence: 0.9+ for obvious flags, 0.5-0.7 for ambiguous.
 3. text_segment must be verbatim from the input.
-4. Maximum ${DG_CONFIG.MAX_MARKERS} markers. Prioritize highest confidence.
+4. Maximum 8 markers. Prioritize highest confidence.
 5. If no flags found: {"markers": [], "llm_summary": "No significant misinformation signals detected."}
 6. Output ONLY the JSON object. No prose outside it.`;
 
